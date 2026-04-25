@@ -63,15 +63,11 @@ const boardCanvas = document.querySelector("#board");
 const boardContext = boardCanvas.getContext("2d");
 const nextCanvas = document.querySelector("#next");
 const nextContext = nextCanvas.getContext("2d");
-const holdCanvas = document.querySelector("#hold");
-const holdContext = holdCanvas.getContext("2d");
 
 let board = createBoard();
 let bag = [];
 let current = null;
 let nextPiece = null;
-let holdPiece = null;
-let canHold = true;
 let score = 0;
 let lines = 0;
 let level = 1;
@@ -121,8 +117,6 @@ function createPiece(type) {
 function startGame() {
   board = createBoard();
   bag = [];
-  holdPiece = null;
-  canHold = true;
   score = 0;
   lines = 0;
   level = 1;
@@ -142,7 +136,6 @@ function startGame() {
 function spawnPiece() {
   current = createPiece(nextPiece);
   nextPiece = nextFromBag();
-  canHold = true;
 
   if (collides(current)) {
     endGame();
@@ -276,23 +269,6 @@ function rotateMatrix(matrix, direction) {
   return rotated;
 }
 
-function holdCurrentPiece() {
-  if (!canPlay() || !canHold) return;
-
-  const heldType = holdPiece;
-  holdPiece = current.type;
-  canHold = false;
-
-  if (heldType) {
-    current = createPiece(heldType);
-    if (collides(current)) {
-      endGame();
-    }
-  } else {
-    spawnPiece();
-  }
-}
-
 function lockPiece() {
   mergePiece();
   sweepLines();
@@ -350,7 +326,6 @@ function loop(time = 0) {
 function draw() {
   resizeCanvasToDisplay(boardCanvas, boardContext);
   resizeCanvasToDisplay(nextCanvas, nextContext);
-  resizeCanvasToDisplay(holdCanvas, holdContext);
 
   const cell = boardCanvas.width / COLS;
   boardContext.clearRect(0, 0, boardCanvas.width, boardCanvas.height);
@@ -368,13 +343,12 @@ function draw() {
   }
 
   drawPreview(nextContext, nextPiece);
-  drawPreview(holdContext, holdPiece);
 }
 
 function drawGrid(context, width, height, cell) {
-  context.fillStyle = "#11171b";
+  context.fillStyle = "#060913";
   context.fillRect(0, 0, width, height);
-  context.strokeStyle = "rgba(255, 255, 255, 0.06)";
+  context.strokeStyle = "rgba(118, 230, 255, 0.08)";
   context.lineWidth = Math.max(1, cell * 0.025);
 
   for (let x = 0; x <= COLS; x += 1) {
@@ -436,7 +410,7 @@ function drawCell(context, x, y, size, color, alpha = 1) {
 
 function drawPreview(context, type) {
   context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-  context.fillStyle = "#f5f8f4";
+  context.fillStyle = "#070a16";
   context.fillRect(0, 0, context.canvas.width, context.canvas.height);
 
   if (!type) return;
@@ -540,7 +514,6 @@ function handleAction(action) {
     "hard-drop": hardDrop,
     "rotate-left": () => rotatePiece(-1),
     "rotate-right": () => rotatePiece(1),
-    hold: holdCurrentPiece,
   };
 
   actions[action]?.();
@@ -567,8 +540,6 @@ document.addEventListener("keydown", (event) => {
     ArrowUp: "rotate-right",
     x: "rotate-right",
     X: "rotate-right",
-    c: "hold",
-    C: "hold",
   };
 
   const action = keys[event.key];
