@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tetris Game</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="game-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Canvas Arcade</p>
+          <h1>Tetris</h1>
+        </div>
+        <div class="top-actions">
+          <button class="control-button" id="pauseButton" type="button" aria-pressed="false">Pause</button>
+          <button class="control-button primary" id="restartButton" type="button">New Game</button>
+        </div>
+      </header>
+
+      <section class="play-layout" aria-label="Tetris game">
+        <aside class="panel stats-panel" aria-label="Scoreboard">
+          <div class="stat">
+            <span>Score</span>
+            <strong id="score">0</strong>
+          </div>
+          <div class="stat">
+            <span>Lines</span>
+            <strong id="lines">0</strong>
+          </div>
+          <div class="stat">
+            <span>Level</span>
+            <strong id="level">1</strong>
+          </div>
+          <div class="stat">
+            <span>Best</span>
+            <strong id="best">0</strong>
+          </div>
+        </aside>
+
+        <div class="board-wrap">
+          <canvas id="board" width="320" height="640" aria-label="Tetris board"></canvas>
+          <div class="overlay hidden" id="overlay">
+            <strong id="overlayTitle">Paused</strong>
+            <span id="overlayText"></span>
+          </div>
+        </div>
+
+        <aside class="panel queue-panel" aria-label="Piece preview">
+          <div class="preview-block">
+            <span>Next</span>
+            <canvas id="next" width="112" height="112" aria-label="Next piece"></canvas>
+          </div>
+          <div class="preview-block">
+            <span>Hold</span>
+            <canvas id="hold" width="112" height="112" aria-label="Held piece"></canvas>
+          </div>
+        </aside>
+      </section>
+
+      <nav class="touch-controls" aria-label="Touch controls">
+        <button type="button" data-action="left" aria-label="Move left">Left</button>
+        <button type="button" data-action="rotate-left" aria-label="Rotate left">Rot L</button>
+        <button type="button" data-action="rotate-right" aria-label="Rotate right">Rot R</button>
+        <button type="button" data-action="right" aria-label="Move right">Right</button>
+        <button type="button" data-action="soft-drop" aria-label="Soft drop">Down</button>
+        <button type="button" data-action="hard-drop" aria-label="Hard drop">Drop</button>
+        <button type="button" data-action="hold" aria-label="Hold piece">Hold</button>
+      </nav>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
